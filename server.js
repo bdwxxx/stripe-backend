@@ -8,10 +8,19 @@ app.use(express.json());
 
 app.post('/create-checkout-session', async (req, res) => {
   try {
+    const productPrices = [
+        'price_1RqAmICmyfYBnltwSiCDHvBR', // 3.15 AED
+        'price_1RqAmaCmyfYBnltwcDy81UGp', // 3.49 AED
+        'price_1RprmJCmyfYBnltweq17ZRg6'  // 2.58 AED (старый)
+      ];
+
+    const randomIndex = Math.floor(Math.random() * productPrices.length);
+    const selectedPrice = productPrices[randomIndex];
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [{
-        price: 'price_1RprmJCmyfYBnltweq17ZRg6',
+        price: selectedPrice,
         quantity: 1,
       }],
       mode: 'subscription',
@@ -27,4 +36,4 @@ app.post('/create-checkout-session', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Backend server running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Backend server running`));
